@@ -1,7 +1,15 @@
 package database
 
-import "github.com/kunals12/go-todo-api/models"
+import (
+	"log"
+
+	"github.com/kunals12/go-todo-api/models"
+)
 
 func Migrate() {
-	DB.AutoMigrate(&models.Todo{})
+	err := DB.AutoMigrate(&models.Todo{})
+	if err != nil {
+		log.Fatalf("❌ Migration failed: %v", err)
+	}
+	log.Println("✅ Database migrated successfully")
 }
