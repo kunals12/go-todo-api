@@ -7,7 +7,10 @@ import (
 )
 
 func Migrate() {
-	err := DB.AutoMigrate(&models.Todo{})
+	// Ensure the uuid-ossp extension exists
+	DB.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
+
+	err := DB.AutoMigrate(&models.User{}, &models.Todo{})
 	if err != nil {
 		log.Fatalf("❌ Migration failed: %v", err)
 	}
