@@ -11,6 +11,7 @@ import (
 var DB *gorm.DB
 
 func Connect() {
+	log.Println("Connecting to DB")
 	dsn := os.Getenv("DB_URL")
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -18,4 +19,5 @@ func Connect() {
 	}
 
 	DB = db
+	log.Println("Connected to DB")
 }
