@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/kunals12/go-todo-api/database"
 	"github.com/kunals12/go-todo-api/models"
+	"github.com/kunals12/go-todo-api/utils"
 )
 
 func CreateUser(c *fiber.Ctx) error {
@@ -16,11 +17,19 @@ func CreateUser(c *fiber.Ctx) error {
 		})
 	}
 
-	existingUser, err := getUserByName(&user.Name)
+	existingUser, err := getUserByName(user.Name)
 
 	if err == nil {
-		// User exists, return it
-		return c.Status(fiber.StatusOK).JSON(existingUser)
+		//User exists — generate token
+		token, err := utils.GenerateJwt(*existingUser)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "Failed to generate token",
+			})
+		}
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"token": token,
+		})
 	}
 
 	// If not found, create new user
@@ -30,10 +39,19 @@ func CreateUser(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(user)
+	token, err := utils.GenerateJwt(*user)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to generate token",
+		})
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"token": token,
+	})
 }
 
-func getUserByName(name *string) (*models.User, error) {
+func getUserByName(name string) (*models.User, error) {
 	var user models.User
 	if err := database.DB.First(&user, "name = ?", name).Error; err != nil {
 		return nil, err
