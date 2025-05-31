@@ -11,7 +11,7 @@ type Todo struct {
 	Title     string    `json:"title"`
 	Completed bool      `json:"completed"`
 	UserId    uuid.UUID `json:"userId"`
-	User      *User     //back-reference
+	User      *User     `json:"-"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
