@@ -13,9 +13,10 @@ import (
 func main() {
 	config.LoadEnv()
 	database.Connect()
-	database.Migrate()
+	// database.Migrate()
 	app := fiber.New()
 	app.Use(recover.New())
 	routes.SetupTodoRoutes(app)
+	routes.UserRoutes(app)
 	log.Fatal(app.Listen(":3000"))
 }

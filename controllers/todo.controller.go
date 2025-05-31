@@ -9,7 +9,15 @@ import (
 
 func GetTodos(c *fiber.Ctx) error {
 	var todos []models.Todo
-	database.DB.Find(&todos)
+	userId := c.Params("userId")
+	userUUID, err := uuid.Parse(userId)
+	if err != nil {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error": "Invalid User Id",
+		})
+	}
+
+	database.DB.Find(&todos, "user_id = ?", userUUID)
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"todos": todos,
 	})

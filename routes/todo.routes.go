@@ -9,7 +9,7 @@ func SetupTodoRoutes(app *fiber.App) {
 	// api := app.Group("/api")
 	todo := app.Group("/todos")
 
-	todo.Get("/", controllers.GetTodos)
+	todo.Get("/:userId", controllers.GetTodos)
 	todo.Post("/", controllers.CreateTodo)
 	todo.Patch("/:id", controllers.PatchTodo)
 	todo.Delete("/:id", controllers.DeleteTodo)

@@ -7,10 +7,10 @@ import (
 )
 
 type Todo struct {
-	ID        uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	ID        uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey" json:"id"`
 	Title     string    `json:"title"`
 	Completed bool      `json:"completed"`
-	UserId    uuid.UUID // foreign key
+	UserId    uuid.UUID `json:"userId"`
 	User      *User     //back-reference
 	CreatedAt time.Time
 	UpdatedAt time.Time
