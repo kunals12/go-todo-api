@@ -1,8 +1,9 @@
 package config
 
 import (
-	"log"
 	"os"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Config holds application-level configuration loaded from environment variables
@@ -20,7 +21,7 @@ var AppConfig Config
 func LoadEnv() {
 	// Try to load variables from .env file (optional; defined in env.go)
 	if err := loadDotEnv(); err != nil {
-		log.Println("Warning: .env file not found, using system env vars")
+		log.Warn().Msg(".env file not found, using system env vars")
 	}
 
 	// Assign values to AppConfig from environment variables with fallbacks
@@ -33,11 +34,11 @@ func LoadEnv() {
 
 	// Ensure DB_URL is provided, otherwise terminate the app
 	if AppConfig.DBUrl == "" {
-		log.Fatal("DB_URL is required")
+		log.Error().Msg("DB_URL is required")
 	}
 
 	if AppConfig.JwtSecretKey == "" {
-		log.Fatal("JWT Secret Not Found")
+		log.Error().Msg("JWT Secret Not Found")
 	}
 }
 
