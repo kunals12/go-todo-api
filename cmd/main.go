@@ -10,7 +10,7 @@ import (
 func main() {
 	config.LoadEnv()
 	database.Connect()
-	database.Migrate()
+	// database.Migrate()
 
 	app := fiber.New()
 	routes.UserRoutes(app)
